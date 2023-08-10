@@ -29,11 +29,26 @@ let TrackingPlanService = exports.TrackingPlanService = class TrackingPlanServic
     }
     async createTrackingPlanWithEvent(trackingPlanData, eventData) {
         try {
+            let display_name = trackingPlanData.display_name;
+            const slug = display_name?.toLowerCase().replace(/\s+/g, '_');
+            trackingPlanData['slug'] = slug;
+            const isAlready = await this.dbService.findOne(collectionMapping_1.collectionMapping.TrackingPlan, { slug: slug });
+            if (isAlready) {
+                throw new common_1.ConflictException();
+            }
             const newTrackingPlan = await this.dbService.create(collectionMapping_1.collectionMapping.TrackingPlan, trackingPlanData);
             const arr = [];
             for (const data of eventData) {
+                let display_name = data.display_name;
+                const slug = display_name?.toLowerCase().replace(/\s+/g, '_');
+                data['slug'] = slug;
+                const isAlready = await this.dbService.findOne(collectionMapping_1.collectionMapping.Event, { slug: slug });
+                if (isAlready) {
+                    throw new common_1.ConflictException();
+                }
                 const newEvent = await this.dbService.create(collectionMapping_1.collectionMapping.Event, data);
-                arr.push(newEvent._id);
+                if (newEvent && newEvent._id)
+                    arr.push(newEvent._id);
             }
             await this.dbService.updateOne(collectionMapping_1.collectionMapping.TrackingPlan, { _id: newTrackingPlan._id }, { rules: { events: arr } });
             return await this.dbService.findById(collectionMapping_1.collectionMapping.TrackingPlan, newTrackingPlan._id);

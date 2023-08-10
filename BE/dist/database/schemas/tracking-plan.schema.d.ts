@@ -24,6 +24,7 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Document } from 'mongoose';
 export declare class TrackingPlan extends Document {
+    slug: string;
     display_name: string;
     description: string;
     rules: {

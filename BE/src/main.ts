@@ -12,6 +12,6 @@ async function bootstrap() {
     optionsSuccessStatus: 204,
   };
   app.enableCors(corsOptions);
-  await app.listen(3001);
+  await app.listen(process.env.APP_PORT || 3001);
 }
 bootstrap();

@@ -15,9 +15,13 @@ const mongoose_2 = require("mongoose");
 let Event = exports.Event = class Event extends mongoose_2.Document {
 };
 __decorate([
+    (0, mongoose_1.Prop)({ required: true, unique: true }),
+    __metadata("design:type", String)
+], Event.prototype, "slug", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], Event.prototype, "name", void 0);
+], Event.prototype, "display_name", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)

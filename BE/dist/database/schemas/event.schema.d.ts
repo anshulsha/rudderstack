@@ -24,7 +24,8 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Document } from 'mongoose';
 export declare class Event extends Document {
-    name: string;
+    slug: string;
+    display_name: string;
     description: string;
     rules: any;
 }

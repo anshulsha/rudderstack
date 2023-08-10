@@ -1,0 +1,58 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27016:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME:
+      MONGO_INITDB_ROOT_PASSWORD:
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app_network
+
+  app:
+    image: rudderstack
+    container_name: rudderstack
+    build:
+      context: ./BE
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - mongodb
+    ports:
+      - "3001:3001"
+    environment:
+      - APP_PORT=3001
+      - DB_PORT=27016
+      - DB_USERNAME=
+      - DB_PASSWORD=
+      - DB_HOST=host.docker.internal
+    networks:
+      - app_network
+    command: npm run start:dev
+
+  fe:
+    image: fe
+    container_name: fe
+    build:
+      context: ./FE
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - APP_PORT=3000
+
+    networks:
+      - app_network
+    command: npm run start
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  mongodb_data:

@@ -18,7 +18,7 @@ exports.DatabaseModule = DatabaseModule = __decorate([
     (0, common_1.Module)({
         exports: [database_service_1.DatabaseService],
         imports: [
-            mongoose_1.MongooseModule.forRoot('mongodb://localhost/rudderstack'),
+            mongoose_1.MongooseModule.forRoot('mongodb://localhost:27016/rudderstack'),
             mongoose_1.MongooseModule.forFeature([
                 { name: event_schema_1.Event.name, schema: event_schema_1.EventSchema },
                 { name: tracking_plan_schema_1.TrackingPlan.name, schema: tracking_plan_schema_1.TrackingPlanSchema },

@@ -15,6 +15,10 @@ const mongoose_2 = require("mongoose");
 let TrackingPlan = exports.TrackingPlan = class TrackingPlan extends mongoose_2.Document {
 };
 __decorate([
+    (0, mongoose_1.Prop)({ required: true, unique: true }),
+    __metadata("design:type", String)
+], TrackingPlan.prototype, "slug", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], TrackingPlan.prototype, "display_name", void 0);

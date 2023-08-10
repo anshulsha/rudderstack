@@ -24,10 +24,28 @@ let EventService = exports.EventService = class EventService {
         return await this.dbService.findOne(collectionMapping_1.collectionMapping.Event, { _id: id });
     }
     async createEvent(data) {
+        let display_name = data.display_name;
+        const slug = display_name?.toLowerCase().replace(/\s+/g, '_');
+        data['slug'] = slug;
+        const isAlready = await this.dbService.findOne(collectionMapping_1.collectionMapping.Event, {
+            slug: slug,
+        });
+        if (isAlready) {
+            throw new common_1.ConflictException();
+        }
         const newEvent = await this.dbService.create(collectionMapping_1.collectionMapping.Event, data);
         return newEvent;
     }
     async updateEvent(id, data) {
+        let display_name = data.display_name;
+        const slug = display_name?.toLowerCase().replace(/\s+/g, '_');
+        data['slug'] = slug;
+        const isAlready = await this.dbService.findOne(collectionMapping_1.collectionMapping.Event, {
+            slug: slug,
+        });
+        if (isAlready) {
+            throw new common_1.ConflictException();
+        }
         const updateEvent = await this.dbService.updateOne(collectionMapping_1.collectionMapping.Event, { _id: id }, data);
         return updateEvent;
     }

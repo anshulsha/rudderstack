@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { collectionMapping } from 'src/database/collectionMapping';
-import { DatabaseService } from 'src/database/database.service';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { collectionMapping } from '../../database/collectionMapping';
+import { DatabaseService } from '../../database/database.service';
 
 @Injectable()
 export class TrackingPlanService {
@@ -25,6 +25,19 @@ export class TrackingPlanService {
 
   async createTrackingPlanWithEvent(trackingPlanData: any, eventData: any[]) {
     try {
+      let display_name = trackingPlanData.display_name;
+      const slug = display_name?.toLowerCase().replace(/\s+/g, '_');
+      trackingPlanData['slug'] = slug;
+      // check for duplicate
+      const isAlready = await this.dbService.findOne(
+        collectionMapping.TrackingPlan,
+        { slug: slug },
+      );
+
+      if (isAlready) {
+        throw new ConflictException();
+      }
+
       // Create the tracking plan
       const newTrackingPlan = await this.dbService.create(
         collectionMapping.TrackingPlan,
@@ -34,11 +47,26 @@ export class TrackingPlanService {
       const arr = [];
       // Create events and associate them with the tracking plan
       for (const data of eventData) {
+        let display_name = data.display_name;
+        const slug = display_name?.toLowerCase().replace(/\s+/g, '_');
+        data['slug'] = slug;
+
+        // check for duplicate
+        const isAlready = await this.dbService.findOne(
+          collectionMapping.Event,
+          { slug: slug },
+        );
+
+        if (isAlready) {
+          throw new ConflictException();
+        }
+
         const newEvent = await this.dbService.create(
           collectionMapping.Event,
           data,
         );
 
+        if (newEvent && newEvent._id)
         arr.push(newEvent._id);
       }
 

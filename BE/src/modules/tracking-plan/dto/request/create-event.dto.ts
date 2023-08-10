@@ -2,7 +2,7 @@ import { IsString, IsJSON } from 'class-validator';
 
 export class CreateEventRequestDto {
   @IsString()
-  name: string;
+  display_name: string;
 
   @IsString()
   description: string;

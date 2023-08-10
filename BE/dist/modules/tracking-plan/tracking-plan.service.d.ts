@@ -1,4 +1,4 @@
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from '../../database/database.service';
 export declare class TrackingPlanService {
     private readonly dbService;
     constructor(dbService: DatabaseService);

@@ -10,7 +10,7 @@ import {
 @Module({
   exports: [DatabaseService],
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/rudderstack'),
+    MongooseModule.forRoot(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/rudderstack`),
     MongooseModule.forFeature([
       { name: Event.name, schema: EventSchema },
       { name: TrackingPlan.name, schema: TrackingPlanSchema },

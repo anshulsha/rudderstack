@@ -10,10 +10,8 @@ import {
 import EventComponent from "../Event/Event";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewTrackingPlan } from "../../redux/actions";
-import { useParams } from "react-router-dom"; // Import useParams
+import { useParams } from "react-router-dom";
 import { fetchTrackingPlan } from "../../redux/actions/tracking-plan";
-
-// import JsonSchemaDisplay from "./components/JsonSchema";
 
 const TrackingPlanBuilder = ({
   onAddRule,
@@ -39,11 +37,13 @@ const TrackingPlanBuilder = ({
 
   const handleAddEvent = () => {
     const event = {
-      name: eventName,
+      display_name: eventName,
       description: eventDescription,
       rules: JSON.parse(eventJSON),
     };
-    setEvents([...events, event]);
+    console.log(events);
+    if (typeof events == "array") setEvents([...events, event]);
+    else setEvents([event]);
     // events.push(event);
 
     setEventName("");
@@ -127,14 +127,18 @@ const App = () => {
     let payload = { ...trackingPlans, rules: { events: events } };
     console.log(payload);
     dispatch(createNewTrackingPlan(payload));
+    setEvents([]);
+    setTrackingPlans([]);
   };
 
   const { id } = useParams();
 
   useEffect(() => {
-    console.log(fetchedTrackingPlan.trackingPlan);
-    setTrackingPlans(fetchedTrackingPlan?.trackingPlan);
-    setEvents(fetchedTrackingPlan?.trackingPlan?.rules?.events);
+    if (fetchTrackingPlan) {
+      console.log(fetchedTrackingPlan.trackingPlan);
+      setTrackingPlans(fetchedTrackingPlan?.trackingPlan);
+      setEvents(fetchedTrackingPlan?.trackingPlan?.rules?.events);
+    }
   }, [fetchedTrackingPlan]);
 
   useEffect(() => {
@@ -169,7 +173,9 @@ const App = () => {
             trackingPlans.display_name &&
             trackingPlans.description && (
               <>
-                <Typography variant="h6">Name: {trackingPlans.name}</Typography>
+                <Typography variant="h6">
+                  Name: {trackingPlans.display_name}
+                </Typography>
                 <Typography variant="h6">
                   Description: {trackingPlans.description}
                 </Typography>
@@ -188,9 +194,10 @@ const App = () => {
               />
             ))}
           {trackingPlans &&
-            trackingPlans.name != "" &&
+            trackingPlans.display_name != "" &&
             trackingPlans.description != "" &&
-            events.length > 0 && (
+            events?.length > 0 &&
+            !id && (
               <Button
                 variant="contained"
                 color="primary"

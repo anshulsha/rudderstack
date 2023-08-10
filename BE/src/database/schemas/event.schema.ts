@@ -3,8 +3,11 @@ import { Document, SchemaTypes } from 'mongoose';
 
 @Schema({ versionKey: '__v' }) // Enable versioning
 export class Event extends Document {
+  @Prop({ required: true, unique: true })
+  slug: string;
+
   @Prop({ required: true })
-  name: string;
+  display_name: string;
 
   @Prop({ required: true })
   description: string;

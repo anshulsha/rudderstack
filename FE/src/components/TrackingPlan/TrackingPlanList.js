@@ -27,20 +27,10 @@ function TrackingPlanList() {
 
   const handleEdit = (id) => {
     navigate(`/edit-tracking-plan/${id}`);
-    // Implement edit functionality
-    // Redirect to the edit page or show a modal
   };
 
   const handleDelete = (id) => {
-    // Implement delete functionality
-    // Example:
-    // fetch(`/api/tracking-plans/${id}`, {
-    //   method: 'DELETE'
-    // })
-    // .then(() => {
-    //   // Remove the deleted item from the state
-    //   setTrackingPlans(trackingPlans.filter(plan => plan._id !== id));
-    // });
+
   };
 
   return (
@@ -53,7 +43,7 @@ function TrackingPlanList() {
               primary={plan.display_name}
               secondary={plan.description}
             />
-            <Button onClick={() => handleEdit(plan._id)}>Edit</Button>
+            <Button onClick={() => handleEdit(plan._id)}>View</Button>
             <Button onClick={() => handleDelete(plan._id)}>Delete</Button>
           </ListItem>
         ))}

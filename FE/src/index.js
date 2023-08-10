@@ -8,14 +8,11 @@ import ReduxThunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import axios from "axios";
 
-// import Routes from "./routes";
 import reducer from "./redux/reducers";
 import { BASE_URL } from "./config";
 import App from "./app";
 
 axios.defaults.baseURL = BASE_URL;
-// axios.defaults.withCredentials = true;
-// console.log('BASE_URL: ', axios.defaults.baseURL);
 
 const middleware = applyMiddleware(promiseMiddleware, ReduxThunk);
 
