@@ -12,10 +12,15 @@
 1. Clone the repository:
 
 ```bash
-cd travel-agency
 
-yarn install
+git clone https://github.com/anshulsha/rudderstack.git
 
-npm run start
+cd rudderstack
+
+git checkout development
+
+git pull
+
+sh setup.sh
 
 ```

@@ -5,9 +5,18 @@ import { EventModule } from './modules/event/event.module';
 import { TrackingPlanModule } from './modules/tracking-plan/tracking-plan.module';
 import { DatabaseModule } from './database/database.module';
 import { APP_PIPE } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [DatabaseModule, TrackingPlanModule, EventModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `${process.cwd()}/config/.env.${process.env.NODE_ENV}`,
+    }),
+    DatabaseModule,
+    TrackingPlanModule,
+    EventModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
