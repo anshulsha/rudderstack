@@ -1,5 +1,3 @@
-# ReactJs project for Travel agency
-
 ## Getting Started
 
 ### Prerequisites
