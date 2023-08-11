@@ -1,30 +1,67 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { collectionMapping } from '../../database/collectionMapping';
 import { DatabaseService } from '../../database/database.service';
 
 @Injectable()
 export class TrackingPlanService {
+  private readonly logger = new Logger(TrackingPlanService.name);
   constructor(private readonly dbService: DatabaseService) {}
 
   async getAllTrackingPlans() {
-    return await this.dbService.find(collectionMapping.TrackingPlan);
+    try {
+      this.logger.log(
+        `--- Entered in service to fetch all tracking plans from db ---`,
+      );
+      return await this.dbService.find(collectionMapping.TrackingPlan);
+    } catch (e) {
+      this.logger.error(
+        `--- Error occured in service to fetch all tracking plans from db, Error: ${JSON.stringify(
+          e.message,
+        )}`,
+      );
+    }
   }
 
   async getTrackingPlanById(id: string) {
-    return await this.dbService.findById(collectionMapping.TrackingPlan, id);
+    try {
+      this.logger.log(
+        `--- Entered in service to fetch tracking plan from Id, Id:${id} ---`,
+      );
+      return await this.dbService.findById(collectionMapping.TrackingPlan, id);
+    } catch (e) {
+      this.logger.error(
+        `--- Error occured in service to fetch tracking plan from Id, Id: ${id}, Error: ${JSON.stringify(
+          e.message,
+        )}`,
+      );
+    }
   }
 
   async createTrackingPlan(data: any) {
-    const newTrackingPlan = await this.dbService.create(
-      collectionMapping.TrackingPlan,
-      data,
-    );
+    try {
+      this.logger.log(
+        `--- Entered in service to create new tracking plan, data:${data} ---`,
+      );
+      const newTrackingPlan = await this.dbService.create(
+        collectionMapping.TrackingPlan,
+        data,
+      );
 
-    return newTrackingPlan;
+      return newTrackingPlan;
+    } catch (e) {
+      this.logger.error(
+        `--- Error occured in service to create new tracking plan, Error: ${JSON.stringify(
+          e.message,
+        )}`,
+      );
+    }
   }
 
   async createTrackingPlanWithEvent(trackingPlanData: any, eventData: any[]) {
     try {
+      this.logger.log(
+        `--- Entered in service to create new tracking plan with events, trackingPlanData:${trackingPlanData}, eventData:${eventData} ---`,
+      );
       let display_name = trackingPlanData.display_name;
       const slug = display_name?.toLowerCase().replace(/\s+/g, '_');
       trackingPlanData['slug'] = slug;
@@ -66,8 +103,7 @@ export class TrackingPlanService {
           data,
         );
 
-        if (newEvent && newEvent._id)
-        arr.push(newEvent._id);
+        if (newEvent && newEvent._id) arr.push(newEvent._id);
       }
 
       // Update the tracking plan with associated events
@@ -81,18 +117,35 @@ export class TrackingPlanService {
         collectionMapping.TrackingPlan,
         newTrackingPlan._id,
       );
-    } catch (error) {
-      throw error;
+    } catch (e) {
+      this.logger.error(
+        `--- Error occured in service to create new tracking plan with events, trackingPlanData:${trackingPlanData}, eventData:${eventData}, Error: ${JSON.stringify(
+          e.message,
+        )}`,
+      );
     }
   }
 
   async updateTrackingPlan(id: string, data: any) {
-    const updateEvent = await this.dbService.updateOne(
-      collectionMapping.TrackingPlan,
-      { _id: id },
-      data,
-    );
+    try {
+      this.logger.log(
+        `--- Entered in service to update tracking plan with Id, Id:${id}, data: ${JSON.stringify(
+          data,
+        )} ---`,
+      );
+      const updateEvent = await this.dbService.updateOne(
+        collectionMapping.TrackingPlan,
+        { _id: id },
+        data,
+      );
 
-    return updateEvent;
+      return updateEvent;
+    } catch (e) {
+      this.logger.error(
+        `--- Error occured in service to update exsisting tracking plan with Id: ${id}, data: ${JSON.stringify(
+          data,
+        )} Error: ${JSON.stringify(e.message)}`,
+      );
+    }
   }
 }
